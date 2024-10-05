@@ -42,11 +42,15 @@ Once you have those prerequisites, you can follow the steps below to get it runn
       ```
       ssh -i ./remote-dev-key root@localhost -p 2222
       ```
-3. Connect to the project using the JetBrains IDE of your choice (I used PHPStorm):
+3. Connect to the project using the JetBrains IDE of your choice (I used PHPStorm, launched via the JetBrains Gateway app):
    1. Open the Remote Development screen for your IDE and select "SSH"
    2. Hit the caret next to "New Project" and select "Connect to Host..." from the dropdown
    3. Enter `root` as the username, `localhost` as the host, `2222` as the port, and check the box for "Specify private key"
    4. In the box that appears, find the path to the private key you generated and insert it there (should look like `/absolute/path/to/project/remote-dev-key`)
    5. Click "Check Connection and Continue"
    6. Wait as the connection is made and the initial setup is done
-   7. 
+   7. Edit or inspect the files, connect to the database via the integration, inspect a launched process, install plugins or themes, whatever you'd like
+   8. Now time to close (and stop) the ide backend
+4. Install PowerShell
+   1. Connect to the "server" via SSH on the command line like you did before (or, honestly, since this is a Docker container, you can probably do the `docker exec` thing instead)
+   2. Go to the `/root/` directory and invoke the `.custom-shell/install-pwsh.sh` script
