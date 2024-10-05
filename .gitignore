@@ -1,0 +1,5 @@
+node_modules
+.idea
+.cert/*
+!.cert/.gitkeep
+remote-dev-key*

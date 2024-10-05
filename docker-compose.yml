@@ -1,0 +1,36 @@
+name: jetbrains-remote-poc
+
+services:
+  web:
+    build:
+      context: '.'
+    volumes:
+      # the first two are user-level configurations and holds things
+      # like the plugins, user configs, the list of projects associated
+      # with the connection to this remote environment, the remote
+      # backend ide, and drivers for db connections
+      - jetbrains-cache:/root/.cache/JetBrains
+      - jetbrains-config:/root/.config/JetBrains
+      # then there's the project itself that would contain an .idea
+      # folder, which contains project-level configuration
+      - project:/root/project
+    ports:
+      # ssh port exposed
+      - '2222:22'
+      # web project exposed
+      - '3785:3785'
+  mysql:
+    image: mysql
+    ports:
+      - 33306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql:delegated
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=project
+
+volumes:
+  jetbrains-cache:
+  jetbrains-config:
+  project:
+  mysql-data:
