@@ -37,7 +37,7 @@ app.use((req: Request, res: Response) => {
 });
 
 app.get('/messages', async (req, res) => {
-    const currentMessages = await db('messages')
+    const currentMessages = await db<Message>('messages')
         .orderBy('id', 'desc')
         .limit(300);
     
@@ -47,9 +47,11 @@ app.get('/messages', async (req, res) => {
 app.post('/messages', async (req, res) => {
     const { contents } = req.payload;
     
-    const [ newMessage ] = await db('messages')
+    const [ newMessage ] = await db<Message>('messages')
         .insert({ contents, sent: new Date() }, '*');
-    
+    // what am I getting here?  I thought it was a message...
+    console.log('newMessage', newMessage);
+    newMessage.sent = new Date(newMessage.sent);
     await res.status(201).send(formatMessage(newMessage));
 });
 
@@ -68,6 +70,6 @@ function formatMessage(message: Message) {
 
 interface Message {
     id: number;
-    content: string;
+    contents: string;
     sent: Date;
 }
