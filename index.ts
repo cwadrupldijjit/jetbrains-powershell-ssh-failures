@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { fluvial, Request, Response, serveFile, preparePlainTextPayload } from 'fluvial';
+import { fluvial, Request, Response, serveFile, preparePlainTextPayload, deserializeJsonPayload } from 'fluvial';
 import { cors } from '@fluvial/cors';
 import { csp } from '@fluvial/csp';
 import knex, { Knex } from 'knex';
@@ -18,7 +18,7 @@ app.use(csp({
         'script-src': [ 'self', 'unsafe-inline' ]
     }
 }));
-app.use(preparePlainTextPayload());
+app.use(deserializeJsonPayload());
 
 const db = knex(developmentDbConfig);
 
@@ -45,7 +45,7 @@ app.get('/messages', async (req, res) => {
 });
 
 app.post('/messages', async (req, res) => {
-    const contents = req.payload as string;
+    const { contents } = req.payload;
     
     const [ newMessage ] = await db('messages')
         .insert({ contents, sent: new Date() }, '*');

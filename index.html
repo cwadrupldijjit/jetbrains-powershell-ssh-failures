@@ -101,12 +101,12 @@
                     return;
                 }
                 
-                textarea.value = '';
-                
                 const response = await fetch('/messages', {
                     method: 'POST',
-                    body: contents,
+                    body: JSON.stringify({ contents }),
                 });
+                
+                textarea.value = '';
                 
                 const updateHeader = !messages.children.length;
                 
