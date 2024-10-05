@@ -141,7 +141,8 @@
             
             function formatAllMessages(allMessages) {
                 messages.innerHTML = allMessages
-                    .map(m => `<li class="message">${formatMessage(m)}</li>`);
+                    .map(m => `<li class="message">${formatMessage(m)}</li>`)
+                    .join('\n');
             }
             
             function formatMessage(message) {
