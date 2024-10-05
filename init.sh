@@ -10,6 +10,7 @@ else
 fi
 
 if [ ! -f '.cert/cert.pem' ]; then
+    rm -rf ./.cert > /dev/null 2>&1
     mv -f /run/.cert .
 fi
 
