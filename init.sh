@@ -1,10 +1,15 @@
 #!/usr/bin/bash
 
+source $HOME/.bashrc
+
 echo 'prepare "project"'
 if [[ `ls` == '' ]]; then
-    git clone git@github.com:cwadrupldijjit/jetbrains-powershell-ssh-failures.git .
-    pnpm install
+    git clone https://github.com/cwadrupldijjit/jetbrains-powershell-ssh-failures.git .
+    mv -f /run/.cert .
 fi
+
+echo 'ensure dependencies are up to date'
+pnpm install
 
 echo 'start the ssh service'
 /usr/sbin/sshd

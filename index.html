@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>Scream Into the Void</title>
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+            }
+            
+            body {
+                margin: 0;
+                display: grid;
+                grid-template-areas: 'heading' 'main';
+                grid-template-rows: max-content 1fr;
+            }
+            
+            header {
+                grid-area: heading;
+                text-align: center;
+            }
+            
+            main {
+                grid-area: main;
+                display: grid;
+                grid-template-areas: 'messages' 'form';
+                grid-template-rows: 1fr max-content;
+                grid-template-columns: 1fr;
+                max-width: 1000px;
+            }
+            
+            ul {
+                grid-area: messages;
+            }
+            
+            form {
+                grid-area: form;
+                display: grid;
+                grid-template-areas: 'input button';
+                grid-template-columns: 1fr max-content;
+            }
+            
+            textarea {
+                grid-area: input;
+            }
+            
+            button {
+                grid-area: button;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <header>
+            <h1>Message your Friends</h1>
+        </header>
+        
+        <main>
+            <ul class="messages"></ul>
+            
+            <form onsubmit="onSubmit(event)">
+                <textarea onchange="onChange(event)"></textarea>
+                
+                <button type="submit" disabled>Send</button>
+            </form>
+        </main>
+        
+        <script type="module">
+            const heading = document.querySelector('h1');
+            const submitButton = document.querySelector('button');
+            const textarea = document.querySelector('textarea');
+            const messages = document.querySelector('ul');
+            
+            async function populateMessages() {
+                const response = await fetch('/messages');
+                const allMessages = await response.json();
+                
+                if (!allMessages.length) {
+                    return;
+                }
+                
+                heading.innerText = 'SCREAM INTO THE VOID!!!';
+                heading.classList.add('italics', 'bolded');
+                formatAllMessages(allMessages);
+                messages.lastChild.scrollIntoView({ behavior: 'instant' });
+            }
+            
+            await populateMessages();
+            
+            async function onSubmit(event) {
+                event.preventDefault();
+                const contents = textarea.value.trim();
+                
+                if (!contents) {
+                    alert('You can\'t scream if you\'re silent.  Say something!');
+                    return;
+                }
+                
+                textarea.value = '';
+                
+                const response = await fetch('/messages', {
+                    method: 'POST',
+                    body: contents,
+                });
+                
+                const updateHeader = !messages.children.length;
+                
+                const newMessage = await response.json();
+                
+                const li = document.createElement('li');
+                li.innerHTML = formatMessage(newMessage);
+                li.classList.add('message');
+                messages.prepend(li);
+                
+                if (updateHeader) {
+                    heading.innerText = 'SCREAM INTO THE VOID!!!';
+                    heading.classList.add('italics', 'bolded');
+                }
+            }
+            
+            function onChange(event) {
+                if (!event.target.value) {
+                    submitButton.innerText = 'Send';
+                    submitButton.classList.remove('italics', 'bolded');
+                    submitButton.disabled = true;
+                }
+                else if (submitButton.innerText == 'Send') {
+                    submitButton.innerText = 'SCREAM!!!';
+                    submitButton.classList.add('italics', 'bolded');
+                    submitButton.disabled = false;
+                }
+            }
+            
+            function formatAllMessages(allMessages) {
+                messages.innerHTML = allMessages
+                    .map(m => `<li class="message">${formatMessage(m)}</li>`);
+            }
+            
+            function formatMessage(message) {
+                return `<div class="date">${formatDate(new Date(message.sent))}</div><div class="content">${message.content}</div>`;
+            }
+            
+            function formatDate(date) {
+                return `${
+                    date.getFullYear()
+                }-${
+                    ('0' + String(date.getMonth() + 1)).slice(-2)
+                }-${
+                    ('0' + String(date.getDate())).slice(-2)
+                }<br>${
+                    ('0' + String(date.getHours())).slice(-2)
+                }:${
+                    ('0' + String(date.getMinutes())).slice(-2)
+                }:${
+                    ('0' + String(date.getSeconds())).slice(-2)
+                }.${
+                    ('00' + String(date.getMilliseconds())).slice(-3)
+                }`;
+            }
+        </script>
+    </body>
+</html>

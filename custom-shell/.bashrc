@@ -1,1 +1,1 @@
-echo 'does this run on init?'
+echo 'this runs on init and successful connection'

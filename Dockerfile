@@ -30,4 +30,9 @@ RUN echo '-- configure ssh server --' && \
 RUN echo '-- add custom bashrc script --' && \
     echo 'source $HOME/.custom-shell/.bashrc' >> /root/.bashrc
 
+RUN echo '-- configure ssh client and git --' && \
+    git config --global safe.directory /var/www/html && \
+    echo 'Host *' >> /root/.ssh/config && \
+    echo "    StrictHostKeyChecking accept-new\n" >> /root/.ssh/config
+
 CMD [ "/run/init.sh" ]
