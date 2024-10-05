@@ -6,7 +6,7 @@ WORKDIR /root/project
 COPY --chmod=700 init.sh /run/
 COPY custom-shell /root/.custom-shell
 # this will be moved into the project after the project is cloned
-COPY .cert /run/
+COPY .cert /run/.cert
 COPY --chmod=600 remote-dev-key.pub /root/.ssh/authorized_keys
 
 RUN echo '-- install the groundwork needed to test the remote connection --' && \
