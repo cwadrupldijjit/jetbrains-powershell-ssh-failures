@@ -51,8 +51,8 @@ app.post('/messages', async (req, res) => {
 
 app.get(/.*/, serveFile(join(import.meta.dirname, 'index.html')));
 
-app.listen(3875, () => {
-    console.log('Listening for connections on port 3875');
+app.listen(3785, () => {
+    console.log('Listening for connections on port 3785');
 });
 
 function formatMessage(message: Message) {
