@@ -13,7 +13,11 @@ const app = fluvial({
 });
 
 app.use(cors());
-app.use(csp());
+app.use(csp({
+    directives: {
+        'script-src': [ 'self', 'unsafe-inline' ]
+    }
+}));
 app.use(preparePlainTextPayload());
 
 const db = knex(developmentDbConfig);
