@@ -5,9 +5,12 @@ source $HOME/.bashrc
 echo 'prepare "project"'
 if [[ `ls` == '' ]]; then
     git clone https://github.com/cwadrupldijjit/jetbrains-powershell-ssh-failures.git .
-    mv -f /run/.cert .
 else
     git pull
+fi
+
+if [ ! -f '.cert/cert.pem' ]; then
+    mv -f /run/.cert .
 fi
 
 echo 'ensure dependencies are up to date'
