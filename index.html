@@ -104,6 +104,9 @@
                 const response = await fetch('/messages', {
                     method: 'POST',
                     body: JSON.stringify({ contents }),
+                    headers: {
+                        'content-type': 'application/json',
+                    },
                 });
                 
                 textarea.value = '';
