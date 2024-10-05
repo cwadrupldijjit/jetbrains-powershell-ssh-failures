@@ -21,4 +21,5 @@ rm powershell_7.4.5-1.deb_amd64.deb
 # Install PowerShell
 apt-get install -y powershell
 
-cp "$(dirname -- "${BASH_SOURCE[0]}")/profile.ps1" /root/.config/powershell
+mkdir -p /root/.config/powershell
+cp "$(dirname -- "${BASH_SOURCE[0]}")/profile.ps1" /root/.config/powershell/profile.ps1
