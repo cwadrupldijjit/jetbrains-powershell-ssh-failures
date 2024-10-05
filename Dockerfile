@@ -1,6 +1,6 @@
 FROM debian
 
-ENV NODEJS_VERSION=22.x
+ENV NODE_VERSION=22.x
 WORKDIR /root/project
 
 COPY --chmod=700 init.sh /run/
