@@ -2,7 +2,7 @@ import { join } from 'node:path';
 import { fluvial, Request, Response, serveFile, preparePlainTextPayload } from 'fluvial';
 import { cors } from '@fluvial/cors';
 import { csp } from '@fluvial/csp';
-import knex from 'knex';
+import knex, { Knex } from 'knex';
 import { development as developmentDbConfig } from './knexfile.js';
 
 const app = fluvial({
@@ -22,7 +22,7 @@ if (!await db.schema.hasTable('messages')) {
     await db.schema.createTable('messages', (tableBuilder) => {
         tableBuilder.increments('id', { primaryKey: true });
         tableBuilder.text('contents').notNullable();
-        tableBuilder.datetime('sent').defaultTo(() => new Date());
+        tableBuilder.datetime('sent').notNullable();
     });
 }
 
@@ -37,16 +37,16 @@ app.get('/messages', async (req, res) => {
         .orderBy('id', 'desc')
         .limit(300);
     
-    await res.send(currentMessages);
+    await res.send(currentMessages.map(formatMessage));
 });
 
 app.post('/messages', async (req, res) => {
     const contents = req.payload as string;
     
     const [ newMessage ] = await db('messages')
-        .insert({ contents }, '*');
+        .insert({ contents, sent: new Date() }, '*');
     
-    await res.status(201).send(newMessage);
+    await res.status(201).send(formatMessage(newMessage));
 });
 
 app.get(/.*/, serveFile(join(import.meta.dirname, 'index.html')));
@@ -54,3 +54,16 @@ app.get(/.*/, serveFile(join(import.meta.dirname, 'index.html')));
 app.listen(3875, () => {
     console.log('Listening for connections on port 3875');
 });
+
+function formatMessage(message: Message) {
+    return {
+        ...message,
+        sent: message.sent.toISOString(),
+    }
+}
+
+interface Message {
+    id: number;
+    content: string;
+    sent: Date;
+}
