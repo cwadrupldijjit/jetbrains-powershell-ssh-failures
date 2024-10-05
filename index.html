@@ -92,7 +92,7 @@
             
             await populateMessages();
             
-            async function onSubmit(event) {
+            window.onSubmit = async function onSubmit(event) {
                 event.preventDefault();
                 const contents = textarea.value.trim();
                 
@@ -123,7 +123,7 @@
                 }
             }
             
-            function onChange(event) {
+            window.onChange = function onChange(event) {
                 if (!event.target.value) {
                     submitButton.innerText = 'Send';
                     submitButton.classList.remove('italics', 'bolded');
